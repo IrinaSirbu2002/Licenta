@@ -4,9 +4,6 @@ import axios from 'axios';
 // Create an axios instance with a base URL
 const api = axios.create({
   baseURL: 'http://localhost:8000', // Replace with your FastAPI backend URL
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 // Response types
@@ -30,14 +27,15 @@ export const uploadDocument = async (file: File, processingType: string): Promis
   const formData = new FormData();
   formData.append('file', file);
 
-  // Add processing type as a query parameter
-  const response = await api.post(`/api/documents/upload?processing_type=${processingType}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
 
-  return response.data;
+  try {
+    // Add processing type as a query parameter
+    const response = await api.post(`/api/documents/upload?processing_type=${processingType}`, formData);
+
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
 };
 
 // Get processing result
